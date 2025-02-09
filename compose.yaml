@@ -1,0 +1,32 @@
+﻿services:
+  langup:
+    image: langup
+    build:
+      context: .
+      dockerfile: LangUp/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - langup-network
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: langup
+      POSTGRES_PASSWORD: langup
+      POSTGRES_DB: langup
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - langup-network
+
+volumes:
+  db_data:
+
+networks:
+  langup-network:
+    driver: bridge

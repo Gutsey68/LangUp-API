@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  langup:
+    build:
+      context: "/Users/gauthierseyzeriat/RiderProjects/LangUp"
+      dockerfile: "LangUp/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/LangUp.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "langup:dev"
+    ports: []
+    volumes:
+    - "/Users/gauthierseyzeriat/RiderProjects/LangUp/LangUp:/app:rw"
+    - "/Users/gauthierseyzeriat/RiderProjects/LangUp:/src:rw"
+    - "/Users/gauthierseyzeriat/.nuget/packages:/home/app/.nuget/packages"
+    working_dir: "/app"

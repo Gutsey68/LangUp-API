@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "LangUp",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
