@@ -1,8 +1,10 @@
 namespace LangUp.DTOs.Translation;
 
-public class GetTranslationResponse
+public class GetAllTranslationsRequest
 {
-    public int Id { get; set; }
+    public int? Page { get; set; }
+    public int? RecordsPerPage { get; set; }
+    
     public string? OriginalText { get; set; }
     public string? TranslatedText { get; set; }
     public string? SourceLanguage { get; set; }
