@@ -9,9 +9,7 @@ using System.Text;
 
 namespace LangUp.Controllers;
 
-[ApiController]
-[Route("api/auth")]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
     private readonly IConfiguration _configuration;
     private readonly IUserService _userService;
@@ -22,8 +20,13 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
+    /// <summary>
+    /// Creates a new user.
+    /// </summary>
+    /// <param name="request">The user registration request.</param>
+    /// <returns>The newly created user.</returns>
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterRequest request)
     {
         var user = new User
         {
@@ -38,9 +41,16 @@ public class AuthController : ControllerBase
             return BadRequest("User registration failed.");
         }
 
-        return Ok("User registered successfully.");
-    }
+        var response = new UserResponse
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email
+        };
 
+        return Ok(response);
+    }
+    
     [HttpPost("token")]
     public IActionResult GenerateToken([FromBody] AuthCredentials credentials)
     {

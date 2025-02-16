@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LangUp.Controllers
 {
-    [Route("api/translations")]
     public class TranslationsController : BaseController
     {
         private readonly ITranslationService _translationService;
