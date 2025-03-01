@@ -1,6 +1,6 @@
 namespace LangUp.DTOs.Translation;
 
-public class GetTranslationResponse
+public class GetTranslationRequest
 {
     public int Id { get; set; }
     public string? OriginalText { get; set; }

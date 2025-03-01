@@ -1,4 +1,6 @@
 using LangUp.Database;
+using LangUp.DTOs;
+using LangUp.DTOs.Auth;
 using LangUp.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,9 +26,40 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
         return true;
     }
+    
+    public async Task<IEnumerable<User>> GetAllUsersAsync(GetAllUsersRequest? request)
+    {
+        int page = request?.Page ?? 1;
+        int numberOfRecords = request?.RecordsPerPage ?? 100;
+        
+        IQueryable<User> query = _dbContext.Users
+            .Skip((page - 1) * numberOfRecords)
+            .Take(numberOfRecords);
+        
+        if (request != null)
+        {
+            if (!string.IsNullOrWhiteSpace(request.Username))
+            {
+                query = query.Where(e => e.Username.Contains(request.Username));
+            }
+            
+            if (!string.IsNullOrWhiteSpace(request.Email))
+            {
+                query = query.Where(e => e.Email.Contains(request.Email));
+            }
+        }
+        
+        return await query.ToListAsync();
+    }
 
     public User? GetUserByUsername(string username)
     {
         return _dbContext.Users.SingleOrDefault(u => u.Username == username);
+    }
+    
+    public bool IsValidUser(AuthCredentials credentials)
+    {
+        var user = GetUserByUsername(credentials.Username!);
+        return user != null && BCrypt.Net.BCrypt.Verify(credentials.Password!, user.Password);
     }
 }

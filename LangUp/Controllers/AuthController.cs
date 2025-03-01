@@ -33,6 +33,7 @@ public class AuthController : BaseController
             Username = request.Username!,
             Password = BCrypt.Net.BCrypt.HashPassword(request.Password!),
             Email = request.Email!,
+            RefreshToken = string.Empty
         };
 
         var result = await _userService.CreateUserAsync(user);
@@ -51,36 +52,42 @@ public class AuthController : BaseController
         return Ok(response);
     }
     
-    [HttpPost("token")]
-    public IActionResult GenerateToken([FromBody] AuthCredentials credentials)
+    /// <summary>
+    /// Log a user.
+    /// </summary>
+    /// <returns/> The access token and the fresh token
+    [HttpPost("login")]
+    public Task<ActionResult<LoginResponse>> Login([FromBody] AuthCredentials credentials)
     {
-        if (IsValidUser(credentials))
+        if (!_userService.IsValidUser(credentials))
         {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, credentials.Username!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            return Task.FromResult<ActionResult<LoginResponse>>(Unauthorized());
         }
 
-        return Unauthorized();
-    }
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, credentials.Username!),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
 
-    private bool IsValidUser(AuthCredentials credentials)
-    {
-        var user = _userService.GetUserByUsername(credentials.Username!);
-        return user != null && BCrypt.Net.BCrypt.Verify(credentials.Password!, user.Password);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: creds);
+
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+        var refreshToken = "ChangeMe";
+
+        return Task.FromResult<ActionResult<LoginResponse>>(Ok(new LoginResponse()
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        }));
     }
 }

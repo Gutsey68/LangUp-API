@@ -8,12 +8,10 @@ namespace LangUp.Controllers
     public class TranslationsController : BaseController
     {
         private readonly ITranslationService _translationService;
-        private readonly ILogger<TranslationsController> _logger;
 
-        public TranslationsController(ITranslationService translationService, ILogger<TranslationsController> logger)
+        public TranslationsController(ITranslationService translationService)
         {
             _translationService = translationService;
-            _logger = logger;
         }
 
         /// <summary>
@@ -22,7 +20,7 @@ namespace LangUp.Controllers
         /// <param name="request">The request parameters for filtering translations.</param>
         /// <returns>A list of translations.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<GetTranslationResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<GetTranslationRequest>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTranslations([FromQuery] GetAllTranslationsRequest? request)
@@ -38,7 +36,7 @@ namespace LangUp.Controllers
         /// <param name="id">The ID of the translation.</param>
         /// <returns>The translation with the specified ID.</returns>
         [HttpGet("{id:int}")]
-        [ProducesResponseType(typeof(GetTranslationResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetTranslationRequest), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetTranslationById(int id)
@@ -61,7 +59,7 @@ namespace LangUp.Controllers
         /// <param name="translationRequest">The request containing the translation details.</param>
         /// <returns>The created translation.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(GetTranslationResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GetTranslationRequest), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateTranslation([FromBody] CreateTranslationRequest translationRequest)
@@ -92,9 +90,9 @@ namespace LangUp.Controllers
             return Ok(new { message = "Translation deleted successfully." });
         }
 
-        private static GetTranslationResponse TranslationToGetTranslationResponse(Translation translation)
+        private static GetTranslationRequest TranslationToGetTranslationResponse(Translation translation)
         {
-            return new GetTranslationResponse
+            return new GetTranslationRequest
             {
                 Id = translation.Id,
                 OriginalText = translation.OriginalText,
