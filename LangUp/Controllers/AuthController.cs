@@ -57,11 +57,12 @@ public class AuthController : BaseController
     /// </summary>
     /// <returns/> The access token and the fresh token
     [HttpPost("login")]
-    public Task<ActionResult<LoginResponse>> Login([FromBody] AuthCredentials credentials)
+    public async Task<ActionResult<LoginResponse>> Login([FromBody] AuthCredentials credentials)
     {
-        if (!_userService.IsValidUser(credentials))
+        var user = await _userService.ValidateUserAsync(credentials);
+        if (user == null)
         {
-            return Task.FromResult<ActionResult<LoginResponse>>(Unauthorized());
+            return Unauthorized();
         }
 
         var claims = new[]
@@ -82,12 +83,15 @@ public class AuthController : BaseController
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-        var refreshToken = "ChangeMe";
+        var refreshToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+    
+        user.RefreshToken = refreshToken;
+        await _userService.UpdateUserAsync(user);
 
-        return Task.FromResult<ActionResult<LoginResponse>>(Ok(new LoginResponse()
+        return Ok(new LoginResponse
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken
-        }));
+        });
     }
 }

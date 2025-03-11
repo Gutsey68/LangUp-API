@@ -7,7 +7,8 @@ namespace LangUp.Services;
 public interface IUserService
 {
     Task<bool> CreateUserAsync(User user);
-    User? GetUserByUsername(string username);
     Task<IEnumerable<User>> GetAllUsersAsync(GetAllUsersRequest? request);
-    bool IsValidUser(AuthCredentials authCredentials);
+    Task<User?> ValidateUserAsync(AuthCredentials credentials);
+    Task<bool> UpdateUserAsync(User user);
+    bool IsValidUser(AuthCredentials credentials);
 }
