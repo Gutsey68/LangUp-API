@@ -68,7 +68,8 @@ public class AuthController : BaseController
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, credentials.Username!),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim("UserId", user.Id.ToString())
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -82,6 +83,7 @@ public class AuthController : BaseController
             signingCredentials: creds);
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+        
 
         var refreshToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
     

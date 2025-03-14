@@ -7,7 +7,8 @@
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - langup-network
 
@@ -23,6 +24,12 @@
       - db_data:/var/lib/postgresql/data
     networks:
       - langup-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   db_data:

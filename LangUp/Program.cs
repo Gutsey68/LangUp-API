@@ -26,6 +26,27 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            
+            var response = new
+            {
+                status = 401,
+                message = "You are not authorized to access this resource.",
+                details = "Authentication failed. Please provide a valid token."
+            };
+            
+            return context.Response.WriteAsJsonAsync(response);
+        }
     };
 });
 

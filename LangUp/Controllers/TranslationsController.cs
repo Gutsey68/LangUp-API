@@ -1,14 +1,17 @@
+using System.Security.Claims;
 using LangUp.DTOs.Translation;
 using LangUp.Models;
 using LangUp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LangUp.Controllers
 {
+    [Authorize]
     public class TranslationsController : BaseController
     {
         private readonly ITranslationService _translationService;
-
+        
         public TranslationsController(ITranslationService translationService)
         {
             _translationService = translationService;
@@ -56,17 +59,25 @@ namespace LangUp.Controllers
         /// <summary>
         /// Creates a new translation.
         /// </summary>
-        /// <param name="translationRequest">The request containing the translation details.</param>
+        /// <param name="request">The request containing the translation details.</param>
         /// <returns>The created translation.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(GetTranslationRequest), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateTranslation([FromBody] CreateTranslationRequest translationRequest)
+        public async Task<IActionResult> CreateTranslation(CreateTranslationRequest request)
         {
-            var newTranslation = await _translationService.CreateTranslationAsync(translationRequest);
+            var userIdClaim = User.FindFirstValue("UserId");
             
-            return CreatedAtAction(nameof(GetTranslationById), new { id = newTranslation.Id }, newTranslation);
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { message = "User ID not found in token" });
+            }
+    
+            request.UserId = userId;
+    
+            var translation = await _translationService.CreateTranslationAsync(request);
+            return CreatedAtAction(nameof(GetTranslationById), new { id = translation.Id }, translation);
         }
 
         /// <summary>

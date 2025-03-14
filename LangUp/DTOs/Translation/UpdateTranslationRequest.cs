@@ -1,3 +1,5 @@
+using LangUp.Models;
+
 namespace LangUp.DTOs.Translation;
 
 public class UpdateTranslationRequest
@@ -6,4 +8,5 @@ public class UpdateTranslationRequest
     public string? TranslatedText { get; set; }
     public string? SourceLanguage { get; set; }
     public string? TargetLanguage { get; set; }
+    public int UserId { get; set; }
 }

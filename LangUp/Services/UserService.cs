@@ -51,6 +51,11 @@ public class UserService : IUserService
         
         return await query.ToListAsync();
     }
+    
+    public async Task<User?> GetUserByIdAsync(int id)
+    {
+        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Id == id);
+    }
 
     public User? GetUserByUsername(string username)
     {

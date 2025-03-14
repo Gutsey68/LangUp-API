@@ -30,6 +30,26 @@ public class UsersController : BaseController
         return Ok(users.Select(UserToGetUserResponse));
     }
     
+    /// <summary>
+    /// Retrieves one user.
+    /// </summary>
+    /// <returns>A list of users.</returns>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetUsersRequest), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetUser([FromRoute] int id)
+    {
+        var user = await _userService.GetUserByIdAsync(id);
+        
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(UserToGetUserResponse(user));
+    }
+    
     private static GetUsersRequest UserToGetUserResponse(User user)
     {
         return new GetUsersRequest

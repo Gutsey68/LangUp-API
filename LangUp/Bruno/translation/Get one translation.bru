@@ -7,9 +7,13 @@ meta {
 get {
   url: http://127.0.0.1:8080/api/translations/:id
   body: none
-  auth: none
+  auth: bearer
 }
 
 params:path {
-  id: 5
+  id: 1
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKb2huMiIsImp0aSI6ImUwZTE1ZWUyLTk4ZTYtNDk3Yy04MGJmLTVhODQ4YTA4ZDRmYiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImV4cCI6MTc0MTk3NTgzMywiaXNzIjoiTXlJc3N1ZXIiLCJhdWQiOiJNeUF1ZGllbmNlIn0.QP-1MpzMFNtyKcG7cbEoyP6Pnk-fGwtC1pDdfNcbADI
 }

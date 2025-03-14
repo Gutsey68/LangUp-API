@@ -11,4 +11,5 @@ public interface IUserService
     Task<User?> ValidateUserAsync(AuthCredentials credentials);
     Task<bool> UpdateUserAsync(User user);
     bool IsValidUser(AuthCredentials credentials);
+    Task<User?> GetUserByIdAsync(int id);
 }

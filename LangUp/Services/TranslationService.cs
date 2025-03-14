@@ -61,7 +61,10 @@ namespace LangUp.Services
                 OriginalText = translationRequest.OriginalText!,
                 TranslatedText = translationRequest.TranslatedText!,
                 SourceLanguage = translationRequest.SourceLanguage!,
-                TargetLanguage = translationRequest.TargetLanguage!
+                TargetLanguage = translationRequest.TargetLanguage!,
+                UserId = translationRequest.UserId,
+                RepetitionLevel = 0
+                
             };
 
             _dbContext.Translations.Add(newTranslation);

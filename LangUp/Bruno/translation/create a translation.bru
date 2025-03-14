@@ -7,7 +7,11 @@ meta {
 post {
   url: http://127.0.0.1:8080/api/translations
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKb2huMiIsImp0aSI6ImI3MWI1YzVjLTg1ODYtNGNmMC05ZDYyLThlNzZmNThkY2JjNSIsIlVzZXJJZCI6IjEiLCJleHAiOjE3NDE5Nzg1NTYsImlzcyI6Ik15SXNzdWVyIiwiYXVkIjoiTXlBdWRpZW5jZSJ9.CF1Zr6IdrViERNZCQXloE4VTNzBmAr1N_uBIJVSM4GM
 }
 
 body:json {
