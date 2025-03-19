@@ -1,9 +1,9 @@
-namespace LangUp;
-
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-public static class Extensions
+namespace LangUp.Extensions;
+
+public static class ValidationExtensions
 {
     public static ModelStateDictionary ToModelStateDictionary(this ValidationResult validationResult)
     {

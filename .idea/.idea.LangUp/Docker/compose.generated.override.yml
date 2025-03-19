@@ -2,7 +2,7 @@
 services:
   langup:
     build:
-      context: "/Users/gauthierseyzeriat/RiderProjects/LangUp"
+      context: "/Users/gauthierseyzeriat/repos/LangUp"
       dockerfile: "LangUp/Dockerfile"
       target: "base"
     command: []
@@ -15,7 +15,7 @@ services:
     image: "langup:dev"
     ports: []
     volumes:
-    - "/Users/gauthierseyzeriat/RiderProjects/LangUp/LangUp:/app:rw"
-    - "/Users/gauthierseyzeriat/RiderProjects/LangUp:/src:rw"
+    - "/Users/gauthierseyzeriat/repos/LangUp/LangUp:/app:rw"
+    - "/Users/gauthierseyzeriat/repos/LangUp:/src:rw"
     - "/Users/gauthierseyzeriat/.nuget/packages:/home/app/.nuget/packages"
     working_dir: "/app"

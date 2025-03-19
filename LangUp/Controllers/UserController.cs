@@ -1,10 +1,12 @@
 using LangUp.DTOs;
 using LangUp.Models;
 using LangUp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LangUp.Controllers;
 
+[Authorize]
 public class UsersController : BaseController
 {
     private readonly IUserService _userService;
